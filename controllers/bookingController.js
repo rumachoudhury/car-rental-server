@@ -1,7 +1,7 @@
 //function to check availability of a car for given data
 
 import Booking from "../models/Booking.js";
-import Car from "../models/Car";
+import Car from "../models/Car.js";
 
 export const checkAvailability = async (car, pickupDate, returnDate) => {
   const bookings = await Booking.find({
@@ -72,6 +72,63 @@ export const createBooking = async (req, res) => {
     });
 
     res.json({ success: true, message: "Booking Created" });
+  } catch (error) {
+    console.log(error.message);
+    res.json({ success: false, message: error.message });
+  }
+};
+
+//API to list user bookings
+export const getUserBookings = async (req, res) => {
+  try {
+    const { _id } = req.user;
+    const bookings = await Booking.find({ user: _id })
+      .populate("car")
+      .sort({ createdAt: -1 });
+    res.json({ success: true, bookings });
+  } catch (error) {
+    console.log(error.message);
+    res.json({ success: false, message: error.message });
+  }
+};
+
+// API to get owner bookings
+export const getOwnerBookings = async (req, res) => {
+  try {
+    if (req.user.role !== "owner") {
+      res.json({
+        success: false,
+        message: "Unauthorize",
+      });
+    }
+
+    const bookings = await Booking.find({ owner: req.user._id })
+      .populate("car user")
+      .select("-user.password")
+      .sort({ createdAt: -1 });
+
+    res.json({ success: true, bookings });
+  } catch (error) {
+    console.log(error.message);
+    res.json({ success: false, message: error.message });
+  }
+};
+
+// API to change /update booking status
+export const changeBookingStatus = async (req, res) => {
+  try {
+    const { _id } = req.user;
+    const { bookingId, status } = req.body;
+    const booking = await Booking.findById(bookingId);
+
+    if (booking.owner.toString !== _id.toString) {
+      res.json({ success: false, message: "Unauthorized" });
+    }
+
+    booking.status = status;
+
+    await booking.save();
+    res.json({ success: true, message: "Status updated" });
   } catch (error) {
     console.log(error.message);
     res.json({ success: false, message: error.message });

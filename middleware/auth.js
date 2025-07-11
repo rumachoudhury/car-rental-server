@@ -13,11 +13,11 @@ export const protect = async (req, res, next) => {
     if (!userId) {
       return res.json({ success: false, message: "not authorized" });
     }
-    req.user = await User.findById(userId).select("-password");
+    // req.user = await User.findById(userId).select("-password");
     next();
   } catch (error) {
     return res.json({ success: false, message: "not authorized" });
   }
 };
 
-//middleware function protect our routes
+// middleware function protect our routes
