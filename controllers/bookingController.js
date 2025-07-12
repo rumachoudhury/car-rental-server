@@ -95,6 +95,7 @@ export const getUserBookings = async (req, res) => {
 // API to get owner bookings
 export const getOwnerBookings = async (req, res) => {
   try {
+    const { _id } = req.user;
     if (req.user.role !== "owner") {
       res.json({
         success: false,
