@@ -68,7 +68,7 @@ export const getOwnerCars = async (req, res) => {
 };
 
 //API to Toggle Car Availability
-export const toggleCarAvailability = async (req, rea) => {
+export const toggleCarAvailability = async (req, res) => {
   try {
     const { _id } = req.user;
     const { carId } = req.body;
@@ -93,7 +93,7 @@ export const toggleCarAvailability = async (req, rea) => {
 };
 
 //API TO Delete car
-export const deleteCar = async (req, rea) => {
+export const deleteCar = async (req, res) => {
   try {
     const { _id } = req.user;
     const { carId } = req.body;
