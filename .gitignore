@@ -1,5 +1,4 @@
 # Ignore environment variables file
-.env
 
 # Ignore node modules
 node_modules/
@@ -10,3 +9,4 @@ logs
 
 # Optional: macOS system files
 .DS_Store
+config.bat
